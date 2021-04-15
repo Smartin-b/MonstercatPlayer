@@ -5,6 +5,7 @@ namespace Monstecat_Desktop_Player
 {
     class Settings
     {
+        public static string subPath = "Obs-stuff";
         public static string URL = "https://www.monstercat.com/player";
         public static string pauseButton = "document.getElementsByClassName('buttons')[0].children[2].click()";
         public static bool usePauseButton = false;
@@ -24,7 +25,7 @@ namespace Monstecat_Desktop_Player
         public static string afterTitle = " by ";
         public static void createSettingsFile()
         {
-            using (StreamWriter outputFile = new StreamWriter(Path.Combine(Environment.CurrentDirectory, "settings.txt")))
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine(DataFilePath(), "settings.txt")))
             {
                 outputFile.Write(
                     "Zwischen Artists :" + betweenArtist + "\n" +
@@ -42,17 +43,30 @@ namespace Monstecat_Desktop_Player
                     "MediaKeys , use y in between :: to force enable" + "\n" +
                     "Play/Pause :" + "n" + ":" + pauseButton + "\n" +
                     "Next Track :" + "y" + ":" + nextButton + "\n" +
-                    "Prev Track :" + "y" + ":" + prevButton + "\n"
+                    "Prev Track :" + "y" + ":" + prevButton + "\n" +
+                    "SubDirectory for Obs and SettingFiles :"+ subPath +"\n"
                     );
             }
         }
+        public static string DataFilePath()
+        {
+            if (subPath == "")
+                return Environment.CurrentDirectory;
+            return Environment.CurrentDirectory + "\\" + subPath;
+        }
         public static bool readSettingsFile()
         {
-            using (StreamReader file = new StreamReader(Path.Combine(Environment.CurrentDirectory, "settings.txt")))
+            if (!Directory.Exists(DataFilePath()))
+            {
+                Directory.CreateDirectory(DataFilePath());
+            }
+            if (!File.Exists(Path.Combine(DataFilePath(), "settings.txt")))
+                createSettingsFile();
+            using (StreamReader file = new StreamReader(Path.Combine(DataFilePath(), "settings.txt")))
             {
                 var zeilensprung = "\n".ToCharArray();
                 string[] data = file.ReadToEnd().Split(zeilensprung);
-                if (data.Length < 16)
+                if (data.Length < 17)
                 {
                     return false;
                 }

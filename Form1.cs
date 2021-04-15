@@ -180,14 +180,14 @@ namespace Monstecat_Desktop_Player
                 Console.WriteLine(imagescr);
                 using (WebClient client = new WebClient())
                 {
-                    client.DownloadFile(new Uri(imagescr), Path.Combine(Environment.CurrentDirectory, "SongImage.png"));
+                    client.DownloadFile(new Uri(imagescr), Path.Combine(Settings.DataFilePath(), "SongImage.png"));
                 }
             }
         }
 
         private void WriteFile(string filename,string infile)
         {
-            using (StreamWriter outputFile = new StreamWriter(Path.Combine(Environment.CurrentDirectory, filename)))
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine(Settings.DataFilePath(), filename)))
             {
                 outputFile.Write(infile);
             }
